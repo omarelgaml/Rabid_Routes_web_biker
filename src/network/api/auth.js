@@ -59,4 +59,3 @@ export const getPlatFormRole = async () => {
     message.error(err.response.data.message);
   }
 };
-//http://localhost:3000/reset-password

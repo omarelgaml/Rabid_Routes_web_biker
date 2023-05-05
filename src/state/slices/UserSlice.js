@@ -4,6 +4,7 @@ import {
   logoutThunk,
   getCurrentUserThunk,
   getRoleThunk,
+  updateUserThunk,
 } from "../thunks/UserThunks";
 import { message } from "antd";
 
@@ -33,18 +34,33 @@ export const userSlice = createSlice({
       state.loading = false;
       message.error(action.payload);
     });
+    //////////////////
     builder.addCase(getCurrentUserThunk.fulfilled, (state, action) => {
       state.loading = false;
       state.user = action.payload.user;
     });
-
+    builder.addCase(getCurrentUserThunk.pending, (state) => {
+      state.loading = true;
+    });
+    /////////////////
+    builder.addCase(updateUserThunk.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user = action.payload.user;
+      message.success("User Updated");
+    });
+    builder.addCase(updateUserThunk.rejected, (state, action) => {
+      state.loading = false;
+      message.error(action.payload);
+    });
+    builder.addCase(updateUserThunk.pending, (state) => {
+      state.loading = true;
+    });
+    //////////////////
     builder.addCase(getRoleThunk.fulfilled, (state, action) => {
       state.platFormRole = action.payload.role;
     });
 
-    builder.addCase(getCurrentUserThunk.pending, (state) => {
-      state.loading = true;
-    });
+    /////////
     builder.addCase(logoutThunk.fulfilled, (state) => {
       state.user = {};
       localStorage.removeItem("accessToken");

@@ -1,19 +1,31 @@
-import { useState } from "react";
 import { Form, Input, Button, Row, Col } from "antd";
-import { useSelector } from "react-redux";
 import { UserSelector } from "../../state/Selectors";
+import { useDispatch, useSelector } from "react-redux";
+import Spinner from "./Spinner";
 
+import { UserLoadingSelector } from "../../state/Selectors";
+import { updateUserThunk } from "../../state/thunks/UserThunks";
 const EditUserPage = () => {
   const [form] = Form.useForm();
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => UserLoadingSelector(state));
+
   const user = useSelector((state) => UserSelector(state));
 
   const handleFormSubmit = (values) => {
     console.log(values);
-    setIsLoading(true);
+    const body = {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      title: values.title,
+      phoneNumber: values.phoneNumber,
+    };
+    dispatch(updateUserThunk({ body, id: user._id }));
   };
   return (
     <div style={{ padding: 24 }}>
+      {loading && Spinner}
+
       <h1>User Information</h1>
       {Object.keys(user).length > 0 && (
         <Form
@@ -61,13 +73,7 @@ const EditUserPage = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item
-                label="Title"
-                name="title"
-                rules={[
-                  { required: true, message: "Please input your title!" },
-                ]}
-              >
+              <Form.Item label="Title" name="title">
                 <Input />
               </Form.Item>
             </Col>
@@ -95,7 +101,7 @@ const EditUserPage = () => {
           </Row>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" loading={isLoading}>
+            <Button type="primary" htmlType="submit" loading={loading}>
               Update Information
             </Button>
           </Form.Item>

@@ -9,3 +9,13 @@ export const getCurrentUser = async () => {
     console.log(err);
   }
 };
+
+export const updateUser = async (body, id) => {
+  try {
+    const response = await axios.put(`/user/${id}`, body);
+
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
