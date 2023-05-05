@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
-import CreateParcel from "./CreateParcel";
+import CreateParcel from "./EditParcel";
 import UserInfo from "./UserInfo";
 import ShowParcels from "./ShowParcels";
 import { useState } from "react";
 function ContentArea(props) {
   // eslint-disable-next-line react/prop-types
   const [editParcelMode, setEditParcelMode] = useState(false);
+
   const [parcelToEdit, setParcelToEdit] = useState();
 
   const parcelClickEdit = (parcel) => {
@@ -18,6 +19,7 @@ function ContentArea(props) {
   };
 
   const { selectedTab } = props;
+
   if (selectedTab === 3 && !editParcelMode) {
     return <ShowParcels editClicked={(parcel) => parcelClickEdit(parcel)} />;
   } else if (selectedTab === 3 && editParcelMode) {
@@ -29,7 +31,7 @@ function ContentArea(props) {
       case 1:
         return <UserInfo />;
       case 2:
-        return <CreateParcel />;
+        return <ShowParcels pickParcel={true} />;
       default:
         return null;
     }

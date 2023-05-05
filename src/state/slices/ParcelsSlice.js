@@ -1,10 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   getParcelsThunk,
-  createParcelThunk,
-  deleteParcelThunk,
   getStatusesThunk,
   editParcelThunk,
+  getUnAssignedParcelsThunk,
 } from "../thunks/ParcelsThunk";
 import { message } from "antd";
 
@@ -34,6 +33,20 @@ export const userSlice = createSlice({
       message.error(action.payload);
     });
 
+    builder.addCase(getUnAssignedParcelsThunk.fulfilled, (state, action) => {
+      state.loading = false;
+
+      state.unAssignedParcels = action.payload.parcels;
+    });
+
+    builder.addCase(getUnAssignedParcelsThunk.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getUnAssignedParcelsThunk.rejected, (state, action) => {
+      state.loading = false;
+      message.error(action.payload);
+    });
+
     builder.addCase(getStatusesThunk.fulfilled, (state, action) => {
       state.loading = false;
 
@@ -49,26 +62,14 @@ export const userSlice = createSlice({
     });
     /*************** */
 
-    builder.addCase(createParcelThunk.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(createParcelThunk.rejected, (state, action) => {
-      state.loading = false;
-      message.error(action.payload);
-    });
     builder.addCase(editParcelThunk.pending, (state) => {
       state.loading = true;
     });
+    builder.addCase(editParcelThunk.fulfilled, () => {
+      message.success("Parcel Updated");
+    });
     builder.addCase(editParcelThunk.rejected, (state, action) => {
       state.loading = false;
-      message.error(action.payload);
-    });
-    builder.addCase(deleteParcelThunk.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(deleteParcelThunk.rejected, (state, action) => {
-      state.loading = false;
-
       message.error(action.payload);
     });
   },

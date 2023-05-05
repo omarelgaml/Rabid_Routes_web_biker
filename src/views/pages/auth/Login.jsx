@@ -8,15 +8,28 @@ import {
   SignupLink,
   ForgotPasswordLink,
 } from "./styles";
-import { useDispatch } from "react-redux";
-import { loginThunk } from "../../../state/thunks/UserThunks";
+
+import { loginThunk, getRoleThunk } from "../../../state/thunks/UserThunks";
+import { useEffect } from "react";
+import { UserRoleSelector } from "../../../state/Selectors";
+import { useDispatch, useSelector } from "react-redux";
+
 const LoginPage = () => {
   const dispatch = useDispatch();
+  const platFormRole = useSelector((state) => UserRoleSelector(state));
+
   const onFinish = (values) => {
-    const body = { email: values.email, password: values.password };
+    const body = {
+      email: values.email,
+      password: values.password,
+      role: platFormRole._id,
+    };
     dispatch(loginThunk(body));
-    console.log("Received values of form: ", values);
   };
+
+  useEffect(() => {
+    if (!platFormRole) dispatch(getRoleThunk());
+  }, [dispatch, platFormRole]);
 
   return (
     <StyledContainer>

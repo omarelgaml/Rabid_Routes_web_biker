@@ -10,10 +10,9 @@ import { resetPassEmail } from "../../../network/api/auth";
 const ResetPasswordEmailPage = () => {
   const onFinish = async (values) => {
     await resetPassEmail({
-      redirect: "http://localhost:8000/reset-password",
+      redirect: "http://localhost:8001/reset-password",
       email: values.email,
     });
-    console.log("Received values of form: ", values);
   };
 
   return (

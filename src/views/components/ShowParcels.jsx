@@ -4,10 +4,14 @@ import {
   ParcelsLoadingSelector,
   ParcelsSelector,
   ParcelsStatusesSelector,
+  ParcelsUnAssignedSelector,
+  UserSelector,
 } from "../../state/Selectors";
 import {
   getParcelsThunk,
   getStatusesThunk,
+  getUnAssignedParcelsThunk,
+  editParcelThunk,
 } from "../../state/thunks/ParcelsThunk";
 import Spinner from "./Spinner";
 import { Select, Row, Col } from "antd";
@@ -25,8 +29,13 @@ const ParcelList = (props) => {
   const parcels = useSelector((state) => ParcelsSelector(state));
   const loading = useSelector((state) => ParcelsLoadingSelector(state));
   const statuses = useSelector((state) => ParcelsStatusesSelector(state));
+  const unAssigned = useSelector((state) => ParcelsUnAssignedSelector(state));
+  const user = useSelector((state) => UserSelector(state));
+
   const [filter, setFilter] = useState("");
-  const { editClicked } = props;
+
+  const { editClicked, pickParcel } = props;
+
   const handleFilterChange = (value) => {
     setFilter(value);
   };
@@ -37,35 +46,62 @@ const ParcelList = (props) => {
       : parcels;
 
   useEffect(() => {
-    if (!parcels) dispatch(getParcelsThunk());
-    if (statuses && !statuses.length) dispatch(getStatusesThunk());
-  }, [parcels, statuses, dispatch]);
+    if (pickParcel) {
+      dispatch(getUnAssignedParcelsThunk());
+    } else {
+      if (!parcels) dispatch(getParcelsThunk());
+      if (statuses && !statuses.length) dispatch(getStatusesThunk());
+    }
+  }, [parcels, statuses, dispatch, pickParcel]);
+
+  const assignParcel = async (parcel) => {
+    try {
+      const body = { biker: user._id };
+      await dispatch(editParcelThunk({ body, id: parcel._id }));
+      await dispatch(getUnAssignedParcelsThunk());
+    } catch (Err) {
+      console.log(Err);
+    }
+  };
   return (
     <ParcelPageContainer>
-      <Row>
-        <Col span={3}>
-          <StyledSelect defaultValue={0} onChange={handleFilterChange}>
-            <Option value={0}>All</Option>
-            {statuses &&
-              statuses.length > 0 &&
-              statuses.map((stat) => (
-                <Option value={stat._id} key={stat._id}>
-                  {stat.name}
-                </Option>
-              ))}
-          </StyledSelect>
-        </Col>
-      </Row>
+      {pickParcel === false && (
+        <Row>
+          <Col span={3}>
+            <StyledSelect defaultValue={0} onChange={handleFilterChange}>
+              <Option value={0}>All</Option>
+              {statuses &&
+                statuses.length > 0 &&
+                statuses.map((stat) => (
+                  <Option value={stat._id} key={stat._id}>
+                    {stat.name}
+                  </Option>
+                ))}
+            </StyledSelect>
+          </Col>
+        </Row>
+      )}
       <ParcelsCardsContainer>
         {loading && <Spinner />}
-        {filteredParcels &&
-          filteredParcels.map((parcel) => (
-            <ParcelCard
-              edit={(parcel) => editClicked(parcel)}
-              parcel={parcel}
-              key={parcel._id}
-            />
-          ))}
+
+        {pickParcel
+          ? unAssigned.map((parcel) => (
+              <ParcelCard
+                edit={(parcel) => editClicked(parcel)}
+                parcel={parcel}
+                key={parcel._id}
+                pickParcel={pickParcel}
+                assignParcel={(parcel) => assignParcel(parcel)}
+              />
+            ))
+          : filteredParcels &&
+            filteredParcels.map((parcel) => (
+              <ParcelCard
+                edit={(parcel) => editClicked(parcel)}
+                parcel={parcel}
+                key={parcel._id}
+              />
+            ))}
       </ParcelsCardsContainer>
     </ParcelPageContainer>
   );

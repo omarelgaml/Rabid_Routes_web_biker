@@ -1,36 +1,27 @@
 /* eslint-disable react/prop-types */
-import { Card, Row, Col, Typography, Divider, message } from "antd";
+import { Card, Row, Col, Typography, Divider } from "antd";
 import styled from "styled-components";
 const { Title, Text } = Typography;
 
-import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteParcelThunk,
-  getParcelsThunk,
-} from "../../state/thunks/ParcelsThunk";
+import { useSelector } from "react-redux";
+import {} from "../../state/thunks/ParcelsThunk";
 import { ParcelsLoadingSelector } from "../../state/Selectors";
 import { DeleteButton } from "./styles";
-const ParcelCard = ({ parcel, edit }) => {
-  const dispatch = useDispatch();
+const ParcelCard = ({ parcel, edit, pickParcel, assignParcel }) => {
   const loading = useSelector((state) => ParcelsLoadingSelector(state));
 
   const {
     dropoffAddress,
     pickupAddress,
-    biker,
+    sender,
     bikerNotes,
     senderNotes,
     createdAt,
     datePicked,
     dateDelivered,
     status,
-    _id,
   } = parcel;
-  const delelteClicked = async () => {
-    await dispatch(deleteParcelThunk(_id));
-    await dispatch(getParcelsThunk());
-    await message.success("Parcel Deleted");
-  };
+
   const StyledCard = styled(Card)`
     width: 100%;
     margin-bottom: 40px;
@@ -52,6 +43,7 @@ const ParcelCard = ({ parcel, edit }) => {
     }-${date.getFullYear()}`;
     return formattedDate;
   };
+
   return (
     <>
       {parcel && (
@@ -71,8 +63,10 @@ const ParcelCard = ({ parcel, edit }) => {
           <Divider />
           <StyledRow gutter={[16, 16]}>
             <Col span={12}>
-              <Text style={labelStyle}>Biker Name:</Text>
-              <div>{biker ? biker.name : "Not assigned"}</div>
+              <Text style={labelStyle}>Sender Name:</Text>
+              <div>
+                {`${sender && sender.firstName} ${sender && sender.lastName}`}
+              </div>
             </Col>
             <Col span={12}>
               <Text style={labelStyle}>Biker Notes:</Text>
@@ -117,27 +111,30 @@ const ParcelCard = ({ parcel, edit }) => {
 
           <Divider />
           <StyledRow gutter={[16, 16]}>
-            <Col span={2} offset={20}>
-              <DeleteButton
-                onClick={() => edit(parcel)}
-                type="primary"
-                htmlType="submit"
-                loading={loading}
-              >
-                Edit
-              </DeleteButton>
-            </Col>
-            <Col span={2}>
-              <DeleteButton
-                onClick={() => delelteClicked()}
-                type="primary"
-                danger
-                htmlType="submit"
-                loading={loading}
-              >
-                Delete
-              </DeleteButton>
-            </Col>
+            {pickParcel ? (
+              <Col span={2} offset={22}>
+                <DeleteButton
+                  onClick={() => assignParcel(parcel)}
+                  type="primary"
+                  htmlType="submit"
+                  loading={loading}
+                >
+                  {`Pick`}
+                </DeleteButton>
+              </Col>
+            ) : (
+              <Col span={2} offset={22}>
+                <DeleteButton
+                  onClick={() => edit(parcel)}
+                  type="primary"
+                  htmlType="submit"
+                  loading={loading}
+                >
+                  {`Edit`}
+                </DeleteButton>
+              </Col>
+            )}
+            <Col span={2}></Col>
           </StyledRow>
         </StyledCard>
       )}

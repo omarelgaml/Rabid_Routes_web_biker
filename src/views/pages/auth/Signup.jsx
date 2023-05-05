@@ -17,11 +17,9 @@ const SignupPage = () => {
   const platFormRole = useSelector((state) => UserRoleSelector(state));
 
   useEffect(() => {
-    console.log(platFormRole);
     if (!platFormRole) dispatch(getRoleThunk());
   }, [dispatch, platFormRole]);
   const onFinish = async (values) => {
-    console.log(platFormRole);
     const body = {
       email: values.email,
       firstName: values.firstName,
