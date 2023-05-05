@@ -56,7 +56,6 @@ api.interceptors.response.use(
       }
     } else {
       await message.error("Sorry, a problem in the server");
-
       window.location.href = "/login";
     }
   }
