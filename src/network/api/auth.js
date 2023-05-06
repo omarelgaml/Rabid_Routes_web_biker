@@ -8,7 +8,6 @@ export const refreshToken = async () => {
 export const register = async (body) => {
   try {
     const response = await axios.post("/auth/register", body);
-    console.log(response);
     await message.success(response.data.message);
     window.location.href = "/login";
   } catch (err) {
