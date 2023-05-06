@@ -59,6 +59,7 @@ const ParcelList = (props) => {
       const body = { biker: user._id };
       await dispatch(editParcelThunk({ body, id: parcel._id }));
       await dispatch(getUnAssignedParcelsThunk());
+      await dispatch(getParcelsThunk());
     } catch (Err) {
       console.log(Err);
     }

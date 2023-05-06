@@ -1,4 +1,4 @@
-import { Button, Select } from "antd";
+import { Button, Select, Card, Row } from "antd";
 import styled from "styled-components";
 export const StyledSpinner = styled.div`
   position: fixed;
@@ -31,3 +31,17 @@ export const StyledSelect = styled(Select)`
   width: 100%;
   margin-bottom: 40px;
 `;
+
+export const StyledCard = styled(Card)`
+  width: 100%;
+  margin-bottom: 40px;
+  boarder-radius: 10px;
+`;
+
+export const StyledRow = styled(Row)`
+  margin-bottom: 20px;
+`;
+
+export const labelStyle = {
+  fontWeight: "bold",
+};

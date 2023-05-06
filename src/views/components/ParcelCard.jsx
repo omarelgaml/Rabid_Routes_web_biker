@@ -1,12 +1,11 @@
 /* eslint-disable react/prop-types */
-import { Card, Row, Col, Typography, Divider } from "antd";
-import styled from "styled-components";
+import { Col, Typography, Divider } from "antd";
 const { Title, Text } = Typography;
 
 import { useSelector } from "react-redux";
 import {} from "../../state/thunks/ParcelsThunk";
 import { ParcelsLoadingSelector } from "../../state/Selectors";
-import { DeleteButton } from "./styles";
+import { DeleteButton, StyledCard, StyledRow, labelStyle } from "./styles";
 const ParcelCard = ({ parcel, edit, pickParcel, assignParcel }) => {
   const loading = useSelector((state) => ParcelsLoadingSelector(state));
 
@@ -21,20 +20,6 @@ const ParcelCard = ({ parcel, edit, pickParcel, assignParcel }) => {
     dateDelivered,
     status,
   } = parcel;
-
-  const StyledCard = styled(Card)`
-    width: 100%;
-    margin-bottom: 40px;
-    boarder-radius: 10px;
-  `;
-
-  const StyledRow = styled(Row)`
-    margin-bottom: 20px;
-  `;
-
-  const labelStyle = {
-    fontWeight: "bold",
-  };
 
   const formatDateTime = (dateTime) => {
     const date = new Date(dateTime);
@@ -103,9 +88,13 @@ const ParcelCard = ({ parcel, edit, pickParcel, assignParcel }) => {
           </StyledRow>
           <Divider />
           <StyledRow gutter={[16, 16]}>
-            <Col span={24}>
+            <Col span={12}>
               <Text style={labelStyle}>Status:</Text>
               <div>{status.name}</div>
+            </Col>
+            <Col span={12}>
+              <Text style={labelStyle}>Sender phone number:</Text>
+              <div>{sender.phoneNumber}</div>
             </Col>
           </StyledRow>
 

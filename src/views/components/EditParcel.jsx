@@ -29,14 +29,16 @@ const CreateParcelPage = (props) => {
     try {
       const id = parcel._id;
       const body = {};
+
       if (values.datePicked && !parcel.datePicked) {
         body.datePicked = values.datePicked.toISOString();
-        body.status = statuses.filter((stat) => stat.code === 2)._id;
+
+        body.status = statuses.filter((stat) => stat.code === 2)[0]._id;
       }
 
       if (values.dateDelivered && !parcel.dateDelivered) {
         body.dateDelivered = values.datePicked.toISOString();
-        body.status = statuses.filter((stat) => stat.code === 3)._id;
+        body.status = statuses.filter((stat) => stat.code === 3)[0]._id;
       }
       body.bikerNotes = values.Notes;
       await dispatch(editParcelThunk({ body, id }));

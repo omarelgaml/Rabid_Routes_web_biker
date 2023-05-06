@@ -17,6 +17,7 @@ import Spinner from "../../components/Spinner";
 const Landing = () => {
   const dispatch = useDispatch();
   const [currentTab, setCurrentTab] = useState(1);
+
   const user = useSelector((state) => UserSelector(state));
   const userLoading = useSelector((state) => UserLoadingSelector(state));
 
@@ -40,7 +41,9 @@ const Landing = () => {
       key: "3",
       icon: <FileOutlined />,
       label: "View Parcels",
-      action: () => setCurrentTab(3),
+      action: () => {
+        setCurrentTab(3);
+      },
     },
     {
       key: "4",
